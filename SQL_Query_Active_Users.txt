@@ -1,0 +1,15 @@
+select
+    timestamp::date date,
+    sum(total) "total_trade_volume"
+    count distinct(user_id) "daily_active_users",
+    sum(count distinct(user_id)) over(
+        order by timestamp::date
+        range between '7 day' preceding and current row
+    ) "weekly_active_users",
+        sum(count distinct(user_id)) over(
+        order by timestamp::date
+        range between '30 day' preceding and current row
+    ) ""monthly_active_users""
+from trade
+group by timestamp::date
+order by timestamp::date 
